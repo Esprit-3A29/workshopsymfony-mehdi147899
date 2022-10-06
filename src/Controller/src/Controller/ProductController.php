@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ClubRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,11 +46,21 @@ class ProductController extends AbstractController
             'nb_participants'=>12));
         return $this->render("product/list.html.twig", array('classe'=>$var1,'salle'=>$var2, 'tab_formations'=>$formations));
     }
-    #[Route('/reservation', name: 'app_reservation')]
+    #[Route('/app_reservation/{b}', name: 'app_reservation')]
 
-    public function reservation()
+    public function reservation($b)
     {
-        return new Response (content:"nouvelle page");
+        return new Response (content:"nouvelle page".$b);
     }
+    
+    #[Route('/clubs', name: 'app_club')]
+
+    public function clublist(ClubRepository $repository)
+    {
+        $clubs=$repository->findAll();
+        return $this->render("club/club.html.twig", array("tabClub"=>$clubs));
+    }
+
+
 }
 
