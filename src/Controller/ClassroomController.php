@@ -28,24 +28,22 @@ public function afficherlist(ClassroomRepository $repository)
 
 
 }
-#[Route('/add_classroom', name: 'add')]
+#[Route('/add_classroom', name: 'add_classroom')]
 
-public function addclass(ManagerRegistry $doctrine, Request $request)
-{
+public function addclass(ManagerRegistry $doctrine, Request $request,ClassroomRepository $repository)
+{   
     $classroom =new ClassRoom;
     $form =$this->createForm(ClassroomType::class,$classroom);
     $form->handleRequest($request);
     if($form->isSubmitted())
     {
-        $em=$doctrine->getManager($request);
-        $em->persist($classroom);
-        $em->flush();
-        return $this->redirectToRoute("list_classroom");
+        $repository->add($classroom,true);
+        return $this->redirectToRoute("list_clasroom");
     }
     return $this->renderForm("classroom/add.html.twig",array("formClassroom"=>$form));
 
 }
-#[Route('/updateForm/{id}', name: 'update')]
+#[Route('/updateForm/{id}', name: 'update_classroom')]
 
 public function update($id,ClassRoomRepository $repository ,ManagerRegistry $doctrine,Request $request)
 {
@@ -59,7 +57,7 @@ public function update($id,ClassRoomRepository $repository ,ManagerRegistry $doc
         }
         return $this->renderForm("classroom/update.html.twig",array("formClassroom"=>$form));
 }
-#[Route('/remove_classroom/{id}', name: 'remove')]
+#[Route('/remove_classroom/{id}', name: 'delete_classroom')]
 
 public function removeclass($id, ManagerRegistry $doctrine,ClassroomRepository $repository)
 {

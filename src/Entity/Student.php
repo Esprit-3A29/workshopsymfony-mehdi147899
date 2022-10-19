@@ -18,6 +18,10 @@ class Student
     #[ORM\Column(nullable: true)]
     private ?float $moyenne = null;
 
+    #[ORM\ManyToOne(inversedBy: 'Students')]
+    #[ORM\JoinColumn(onDelete:"CASCADE")]
+    private ?Classroom $classroom = null;
+
     public function getNce(): ?int
     {
         return $this->nce;
@@ -53,4 +57,17 @@ class Student
 
         return $this;
     }
+
+    public function getClassroom(): ?Classroom
+    {
+        return $this->classroom;
+    }
+
+    public function setClassroom(?Classroom $classroom): self
+    {
+        $this->classroom = $classroom;
+
+        return $this;
+    }
+    
 }

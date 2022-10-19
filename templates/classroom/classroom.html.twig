@@ -1,10 +1,10 @@
-<a href="{{ path('add') }}">add</a>
+<a href="{{ path('add_classroom') }}">add</a>
 <br>
 {%for i in clasroom_tab%}
 identifiant: {{i.id}}
 name:{{i.name}}
 description: {{i.description}}
 
-<a href="{{ path('remove',{'id':i.id}) }}">Delete</a>
-<a href="{{ path('update',{'id':i.id}) }}">Update</a><br>
+<a href="{{ path('delete_classroom',{'id':i.id}) }}">Delete</a>
+<a href="{{ path('update_classroom',{'id':i.id}) }}">Update</a><br>
 {%endfor%}
