@@ -8,3 +8,8 @@ description: {{i.description}}
 <a href="{{ path('delete_classroom',{'id':i.id}) }}">Delete</a>
 <a href="{{ path('update_classroom',{'id':i.id}) }}">Update</a><br>
 {%endfor%}
+{%for s in student_tab%}
+identifiant: {{s.nce}}
+name:{{s.moyenne}}
+description: {{s.username}}
+{%endfor%}

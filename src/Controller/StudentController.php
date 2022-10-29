@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Form\SearchStudentType;
 use App\Entity\Student;
 use App\Form\StudentsType;
 use App\Repository\StudentRepository;
@@ -9,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use phpDocumentor\Reflection\PseudoTypes\True_;
+use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\HttpFoundation\Request;
 
 
@@ -23,12 +25,29 @@ class StudentController extends AbstractController
     }
 
     #[Route('/students', name: 'list_student')]
-    public function liststudent(StudentRepository $repository)
+    public function listStudent(Request $request,StudentRepository $repository)
     {
-        $students=$repository->findAll();
-        return $this->render("Student/list_student.html.twig", array("tabStudent"=>$students));
+        $students= $repository->findAll();
+       // $students= $this->getDoctrine()->getRepository(StudentRepository::class)->findAll();
+        $sortByMoyenne= $repository->sortByMoyenne();
+       $formSearch= $this->createForm(SearchStudentType::class);
+       $formSearch->handleRequest($request);
+       $topStudents= $repository->topStudent();
+       if($formSearch->isSubmitted()){
+           $nce= $formSearch->get('nce')->getData();
+           //var_dump($nce).die();
+           $result= $repository->searchStudent($nce);
+           return $this->renderForm("Student/list_student.html.twig",
+               array("tabStudent"=>$result,
+                   "sortByMoyenne"=>$sortByMoyenne,
+                   "searchForm"=>$formSearch));
+       }
+         return $this->renderForm("Student/list_student.html.twig",
+           array("tabStudent"=>$students,
+               "sortByMoyenne"=>$sortByMoyenne,
+                "searchForm"=>$formSearch,
+               'topStudents'=>$topStudents));
     }
-
 
     #[Route('/addForm', name: 'add2')]
     public function addForm(ManagerRegistry $doctrine,Request $request)
